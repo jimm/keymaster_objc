@@ -213,8 +213,7 @@ KeyMaster *km = nil;
 
 - (id)addSong:(Song *)song {
     [allSongs addSong:song];
-    // FIXME
-    // [allSongs sortBySongName];
+    [allSongs sortBySongName];
     return self;
 }
 
