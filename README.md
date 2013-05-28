@@ -3,11 +3,20 @@
 KeyMaster similar to [PatchMaster](http://patchmaster.org/), but it's for
 the Mac and it's written in Objective C.
 
+I wrote a native Mac app because when playing through PatchMaster, I was
+getting lag. KeyMaster uses the Mac's native MIDI framework as wrapped by
+Pete Yandell's excellent [PYMIDI](https://github.com/notahat/pymidi)
+library.
+
 # Building
 
     make
 
 # Testing
+
+    make test
+
+## Testing Setup
 
 Before you run the test, you'll have to copy or link the SenTestingKit
 framework to somewhere like /System/Library/Frameworks. I can't figure out
@@ -22,9 +31,9 @@ To create a link:
         /Applications/Xcode.app/Contents/Developer/Library/Frameworks/SenTestingKit.framework \
         /System/Library/Frameworks/SenTestingKit.framework
 
-To run the tests:
+# Running
 
-    make test
+    ./keymaster examples/example.km
 
 # To Do
 
