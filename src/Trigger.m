@@ -22,7 +22,7 @@
     Byte *bytes;
     for (bytes = [pmi message]; bytes != nil; bytes = [pmi nextMessage]) {
         if (strncmp((char *)[data bytes], (char *)bytes, [data length]) == 0) {
-            [[KeyMaster instance] queueKeyPress:actionKey];
+            [[KeyMaster instance] executeKeyPress:actionKey];
             break;
         }
     }

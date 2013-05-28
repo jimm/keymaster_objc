@@ -15,6 +15,8 @@
 #import <curses/InfoWindow.h>
 #import <curses/PromptWindow.h>
 
+#define TESTING_KEY 'Z'
+
 @interface KeyMaster (Private)
 - ncursesInit;
 - ncursesShutdown;
@@ -22,7 +24,6 @@
 - resizeWindows;
 - refreshAll;
 - setWindowData;
-- (int)nextKeyPress;
 @end
 
 KeyMaster *km = nil;
@@ -52,8 +53,6 @@ KeyMaster *km = nil;
     patchWin = nil;
     triggerWin = nil;
     infoWin = nil;
-
-    running = NO;
 
     return self;
 }
@@ -87,7 +86,6 @@ KeyMaster *km = nil;
     [[cursor patch] start];
     for (InputInstrument *input in inputs)
         [input start];
-    running = YES;
     return self;
 }
 
@@ -95,62 +93,68 @@ KeyMaster *km = nil;
     [[cursor patch] stop];
     for (InputInstrument *input in inputs)
         [input stop];
-    running = NO;
     return self;
 }
 
 - (id)run {
-    NSString *regex;
-
     [self start];
     [self ncursesInit];
     [self createWindows];
 
-    queuedKey = 0;
-    BOOL done = NO;
-    while (!done) {
-        [self refreshAll];
-        int ch = [self nextKeyPress];
-        switch (ch) {
-        case KEY_RESIZE:
-            [self resizeWindows];
-            break;
-        case 'j': case KEY_DOWN:
-            [cursor nextPatch];
-            break;
-        case 'k': case KEY_UP:
-            [cursor prevPatch];
-            break;
-        case 'n': case KEY_RIGHT:
-            [cursor nextSong];
-            break;
-        case 'p': case KEY_LEFT:
-            [cursor prevSong];
-            break;
-        case 'g':
-            regex = [[PromptWindow withTitle:@"Go To Song" prompt:@"Go To Song:"] gets];
-            if ([regex length] > 0)
-                [cursor gotoSongWithNameMatching:regex];
-            break;
-        case 't':
-            regex = [[PromptWindow withTitle:@"Go To Chain" prompt:@"Go To Chain:"] gets];
-            if ([regex length] > 0)
-                [cursor gotoChainWithNameMatching:regex];
-            break;
-        case 'h': case '?':
-            // help
-            break;
-        case 27:                // ESC
-            // panic
-            break;
-        case 'q':
-            done = YES;
-            break;
-        }
-    }
+    done = NO;
+    [self refreshAll];
+    while (!done)
+        [self executeKeyPress:getch()];
 
     [self ncursesShutdown];
     [self stop];
+    return self;
+}
+
+- (id)executeKeyPress:(int)key {
+    NSString *regex;
+
+    switch (key) {
+    case KEY_RESIZE:
+        [self resizeWindows];
+        break;
+    case 'j': case KEY_DOWN:
+        [cursor nextPatch];
+        break;
+    case 'k': case KEY_UP:
+        [cursor prevPatch];
+        break;
+    case 'n': case KEY_RIGHT:
+        [cursor nextSong];
+        break;
+    case 'p': case KEY_LEFT:
+        [cursor prevSong];
+        break;
+    case 'g':
+        regex = [[PromptWindow withTitle:@"Go To Song" prompt:@"Go To Song:"] gets];
+        if ([regex length] > 0)
+            [cursor gotoSongWithNameMatching:regex];
+        break;
+    case 't':
+        regex = [[PromptWindow withTitle:@"Go To Chain" prompt:@"Go To Chain:"] gets];
+        if ([regex length] > 0)
+            [cursor gotoChainWithNameMatching:regex];
+        break;
+    case 'h': case '?':
+        // help
+        break;
+    case 27:                    // ESC
+        // FIXME send individual notes
+        [self panicSendIndividualNotes:NO];
+        break;
+    case TESTING_KEY:           // used for testing only
+        testingKeySent = YES;
+        break;
+    case 'q':
+        done = YES;
+        break;
+    }
+    [self refreshAll];
     return self;
 }
 
@@ -249,27 +253,6 @@ KeyMaster *km = nil;
     return cursor;
 }
 
-- (id)queueKeyPress:(int)key {
-    queuedKey = key;
-    return self;
-}
-
-// For testing only.
-- (int)queuedKey {
-    return queuedKey;
-}
-
-- (int)nextKeyPress {
-    int ch = 0;
-    if (queuedKey > 0) {
-        ch = queuedKey;
-        queuedKey = 0;
-    }
-    else
-        ch = getch();
-    return ch;
-}
-
 - (id)ncursesInit {
     initscr();
     cbreak();
@@ -359,6 +342,19 @@ KeyMaster *km = nil;
 - (id)panicSendIndividualNotes:(BOOL)individual {
     for (OutputInstrument *output in outputs)
         [output panicSendIndividualNotes:individual];
+}
+
+- (int)testingKey {
+    return TESTING_KEY;
+}
+
+- (BOOL)testingKeySent {
+    return testingKeySent;
+}
+
+- (id)testingKeySent:(BOOL)value {
+    testingKeySent = value;
+    return self;
 }
 
 @end

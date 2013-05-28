@@ -35,11 +35,18 @@ To create a link:
 
     ./keymaster examples/example.km
 
+# Bugs
+
+* Need to remember ESC key in KeyMaster.m and send individual note-offs in
+  panic method when two ESC keys sent in a row.
+
 # To Do
 
 * Documentation
 * Filters
 * Better example with better comments
+* Aliases
+* Named Messages and Message Keys
 
 # Thanks
 

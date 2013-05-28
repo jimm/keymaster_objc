@@ -14,7 +14,8 @@
     Byte bytes[1];
     bytes[0] = TUNE_REQUEST;
     NSData *data = [NSData dataWithBytes:bytes length:1];
-    trigger = [Trigger withData:data performKey:'n'];
+    trigger = [Trigger withData:data performKey:[[KeyMaster instance] testingKey]];
+    [[KeyMaster instance] testingKeySent:NO];
 }
 
 - (void)testSignal {
@@ -26,9 +27,9 @@
     packet.data[2] = 127;
     packet.data[3] = TUNE_REQUEST;
 
-    [[KeyMaster instance] queueKeyPress:0];
+    STAssertEquals(NO, [[KeyMaster instance] testingKeySent], @"bad initial state");
     [trigger signal:&packet];
-    STAssertEquals((int)'n', [[KeyMaster instance] queuedKey], @"bad queued key");
+    STAssertEquals(YES, [[KeyMaster instance] testingKeySent], @"trigger not executed");
 }
 
 - (void)testSignalDoesNotTrigger {
@@ -39,9 +40,9 @@
     packet.data[1] = 42;
     packet.data[2] = 127;
 
-    [[KeyMaster instance] queueKeyPress:0];
+    STAssertEquals(NO, [[KeyMaster instance] testingKeySent], @"bad initial state");
     [trigger signal:&packet];
-    STAssertEquals((int)0, [[KeyMaster instance] queuedKey], @"trigger should not have been sent");
+    STAssertEquals(NO, [[KeyMaster instance] testingKeySent], @"trigger should not have been executed");
 }
 
 - (void)testDataDescription {

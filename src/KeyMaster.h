@@ -23,8 +23,8 @@
     TriggerWindow *triggerWin;
     InfoWindow *infoWin;
 
-    int queuedKey;
-    BOOL running;
+    BOOL done;
+    BOOL testingKeySent;
 }
 
 + (KeyMaster *)instance;
@@ -54,7 +54,7 @@
 
 - (Chain *)findChainWithNameMatching:(NSString *)regexString;
 
-- (id)queueKeyPress:(int)key;
+- (id)executeKeyPress:(int)key;
 
 - (id)panicSendIndividualNotes:(BOOL)individual;
 
@@ -63,5 +63,8 @@
 @interface KeyMaster (testing)
 - (id)start;
 - (id)stop;
-- (int)queuedKey;
+
+- (int)testingKey;
+- (BOOL)testingKeySent;
+- (id)testingKeySent:(BOOL)value;
 @end
