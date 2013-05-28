@@ -1,0 +1,42 @@
+input in1 IAC Driver Bus 1
+output out1 IAC Driver Bus 1
+
+//           controller, gen purpose 5
+trigger in1 n  192          50         127
+//           controller, gen purpose 6
+trigger in1 p  192          51         127
+//           controller, gen purpose 7
+trigger in1 j  192          52         127
+//            controller, gen purpose 8
+trigger in1 k  192          53         127
+
+// song
+song Song One
+notes
+notes for the first song
+this is multi-line
+end notes
+
+  patch Song One, Patch One
+    conn in1 out1 2
+      progChg 1 64              // bank 1, pc 64
+      zone c4 b5
+      xpose 12
+
+song Song Two
+notes
+simple notes
+end notes
+
+  patch Song Two, Patch One
+    conn in1 6 out1 2
+      progChg 64                // no bank
+
+  patch Song Two, Patch Two
+
+song Example Song
+
+chain Tonight's Entertainment
+  song Song Two
+  song Song One
+  song Example Song
