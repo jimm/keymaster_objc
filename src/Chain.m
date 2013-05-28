@@ -52,7 +52,6 @@
     }
 
     for (id s in songs) {
-        NSLog(@"comparing regex %@ with name %@", regexString, [s name]); // DEBUG
         NSTextCheckingResult *match = [regex firstMatchInString:[s name]
                                                         options:0
                                                           range:NSMakeRange(0, [[s name] length])];
