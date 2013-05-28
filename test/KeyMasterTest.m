@@ -2,6 +2,8 @@
 #import <KeyMaster.h>
 #import <Chain.h>
 #import <Song.h>
+#import <consts.h>
+#import <MockOutputInstrument.h>
 
 @interface KeyMasterTest : SenTestCase {
     KeyMaster *km;
@@ -43,6 +45,27 @@
     STAssertEquals(chain, [km findChainWithNameMatching:@"f.*"], @"bad match");
     STAssertEquals(chain, [km findChainWithNameMatching:@"o$"], @"bad match");
     STAssertEquals([km allSongs], [km findChainWithNameMatching:@"all"], @"bad match");
+}
+
+- (void)testPanic {
+    MockOutputInstrument *output = [MockOutputInstrument withShortName:@"mockout" longName:@"Mock Output Instrument"];
+    [km addOutput:output];
+
+    [km executeKeyPress:[km testingKey]];
+    [km executeKeyPress:27];
+    STAssertEquals((NSUInteger)(MIDI_CHANNELS * 3), [[output buffer] length], @"wrong num panic bytes sent");
+}
+
+- (void)testPanicSecondTime {
+    MockOutputInstrument *output = [MockOutputInstrument withShortName:@"mockout" longName:@"Mock Output Instrument"];
+    [km addOutput:output];
+
+    [km executeKeyPress:[km testingKey]];
+    [km executeKeyPress:27];
+    [output reset];
+    [km executeKeyPress:27];
+    NSUInteger expectedLength = MIDI_CHANNELS * 3 + MIDI_CHANNELS * 128 * 3;
+    STAssertEquals(expectedLength, [[output buffer] length], @"wrong num panic bytes sent");
 }
 
 @end

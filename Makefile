@@ -131,4 +131,4 @@ test/ChainTest.o: test/ChainTest.m src/Chain.h src/Chain.m src/Song.h
 
 test/OutputInstrumentTest.o: test/OutputInstrumentTest.m test/MockOutputInstrument.o src/OutputInstrument.h src/OutputInstrument.m src/consts.h
 
-test/KeyMasterTest.o: test/KeyMasterTest.m src/KeyMaster.h src/KeyMaster.m src/Chain.h src/Song.h
+test/KeyMasterTest.o: test/KeyMasterTest.m src/KeyMaster.h src/KeyMaster.m src/Chain.h src/Song.h test/MockOutputInstrument.o src/consts.h

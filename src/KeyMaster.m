@@ -101,6 +101,7 @@ KeyMaster *km = nil;
     [self ncursesInit];
     [self createWindows];
 
+    prevKey = 0;
     done = NO;
     [self refreshAll];
     while (!done)
@@ -145,7 +146,7 @@ KeyMaster *km = nil;
         break;
     case 27:                    // ESC
         // FIXME send individual notes
-        [self panicSendIndividualNotes:NO];
+        [self panicSendIndividualNotes:(prevKey == 27)];
         break;
     case TESTING_KEY:           // used for testing only
         testingKeySent = YES;
@@ -154,6 +155,7 @@ KeyMaster *km = nil;
         done = YES;
         break;
     }
+    prevKey = key;
     [self refreshAll];
     return self;
 }

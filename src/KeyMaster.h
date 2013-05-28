@@ -23,6 +23,7 @@
     TriggerWindow *triggerWin;
     InfoWindow *infoWin;
 
+    int prevKey;
     BOOL done;
     BOOL testingKeySent;
 }
