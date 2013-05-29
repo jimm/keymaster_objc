@@ -2,13 +2,13 @@ input in1 IAC Driver Bus 1
 output out1 IAC Driver Bus 1
 
 //           controller, gen purpose 5
-trigger in1 n  192          50         127
+trigger in1 n  0xb0         50         0xff
 //           controller, gen purpose 6
-trigger in1 p  192          51         127
+trigger in1 p  0xb0         51         0xff
 //           controller, gen purpose 7
-trigger in1 j  192          52         127
+trigger in1 j  0xb0         52         0xff
 //            controller, gen purpose 8
-trigger in1 k  192          53         127
+trigger in1 k  0xb0         53         0xff
 
 // song
 song Song One

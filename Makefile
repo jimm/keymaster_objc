@@ -17,7 +17,7 @@ TESTNAME = test/kmtest
 TEST_SRC = test/kmtest.m test/PatchTest.m test/ConnectionTest.m \
     test/MockInputInstrument.m test/MockOutputInstrument.m test/TriggerTest.m \
     test/PacketMessageIteratorTest.m test/ChainTest.m test/KeyMasterTest.m \
-    test/OutputInstrumentTest.m
+    test/OutputInstrumentTest.m test/ReaderTest.m
 TEST_OBJS = $(TEST_SRC:.m=.o)
 
 # ================================================================
@@ -132,3 +132,5 @@ test/ChainTest.o: test/ChainTest.m src/Chain.h src/Chain.m src/Song.h
 test/OutputInstrumentTest.o: test/OutputInstrumentTest.m test/MockOutputInstrument.o src/OutputInstrument.h src/OutputInstrument.m src/consts.h
 
 test/KeyMasterTest.o: test/KeyMasterTest.m src/KeyMaster.h src/KeyMaster.m src/Chain.h src/Song.h test/MockOutputInstrument.o src/consts.h
+
+test/ReaderTest.o: test/ReaderTest.m src/Reader.h src/Reader.m src/KeyMaster.h test/MockInputInstrument.h src/Trigger.h

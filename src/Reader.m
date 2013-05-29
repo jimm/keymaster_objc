@@ -16,7 +16,6 @@
 - (void)processLine:(NSString *)line;
 - (void)notesLine:(NSString *)line;
 - (void)endNotes:(NSString *)line;
-- (int)noteFromStr:(NSString *)str;
 - (void)addSongToChain:(NSString *)line;
 - (NSString *)cleanse:(NSString *)line;
 - (NSTextCheckingResult *)match:(NSString *)regexString inString:(NSString *)str;
@@ -34,6 +33,9 @@
     trigger = nil;
     readingNotes = NO;
     readingChain = NO;
+    noteRegex = [NSRegularExpression regularExpressionWithPattern:@"^[abcdefg][s#fb]?[0-9]+$"
+                                                          options:NSRegularExpressionCaseInsensitive
+                                                            error:nil];
     return self;
 }
 
@@ -95,6 +97,10 @@
     }
 }
 
+- (void)in:(NSString *)line {
+    [self input:line];
+}
+
 - (void)output:(NSString *)line {
     NSTextCheckingResult *match = [self match:@"output\\s+(\\w+)\\s+(.*)" inString:line];
     if (match) {
@@ -108,12 +114,24 @@
     }
 }
 
+- (void)out:(NSString *)line {
+    [self output:line];
+}
+
 - (void)message:(NSString *)line {
     // TODO
 }
 
+- (void)msg:(NSString *)line {
+    [self message:line];
+}
+
 - (void)messageKey:(NSString *)line {
     // TODO
+}
+
+- (void)msgKey:(NSString *)line {
+    [self messageKey:line];
 }
 
 - (void)trigger:(NSString *)line {
@@ -130,15 +148,14 @@
     }
     int key = [[args objectAtIndex:2] characterAtIndex:0];
 
-    // The rest of the args are byte values, except the last one which is a
-    // keypress key number.
-    int len = [args count];
-    unsigned char bytes[len-3];
+    // The rest of the args are byte values.
+    int len = [args count] - 3;
+    unsigned char bytes[len];
     int i;
-    for (i = 3; i < len; ++i)
-        bytes[i-3] = [[args objectAtIndex:i] intValue];
+    for (i = 0; i < len; ++i)
+        bytes[i] = [self byteValue:[args objectAtIndex:i+3]];
 
-    NSData *data = [NSData dataWithBytes:bytes length:len-3]; // all but the last key byte
+    NSData *data = [NSData dataWithBytes:bytes length:len];
     [inst addTrigger:[Trigger withData:data performKey:key]];
 }
 
@@ -263,38 +280,8 @@
 - (void)zone:(NSString *)line {
     NSTextCheckingResult *match = [self match:@"zone\\s+(\\w+)\\s+(\\w+)" inString:line];
     if (match) {
-        [connection  zoneLow:[self noteFromStr:[line substringWithRange:[match rangeAtIndex:1]]]];
-        [connection zoneHigh:[self noteFromStr:[line substringWithRange:[match rangeAtIndex:2]]]];
-    }
-}
-
-- (int)noteFromStr:(NSString *)str {
-    char ch = [str characterAtIndex:0];
-    if (isdigit(ch))
-        return [str intValue];
-    else {
-        int note, octave;
-        switch (ch) {
-        case 'c': case 'C': note = 0; break;
-        case 'd': case 'D': note = 2; break;
-        case 'e': case 'E': note = 4; break;
-        case 'f': case 'F': note = 5; break;
-        case 'g': case 'G': note = 7; break;
-        case 'a': case 'A': note = 9; break;
-        case 'b': case 'B': note = 11; break;
-        }
-        ch = [str characterAtIndex:1];
-        int octaveIndex = 1;
-        if (ch == '#' || ch == 's' || ch == 'S') {
-            ++note;
-            ++octaveIndex;
-        }
-        else if (ch == 'b') {
-            --note;
-            ++octaveIndex;
-        }
-        octave = [[str substringFromIndex:octaveIndex] intValue];
-        return (octave - 1) * 12 + note;
+        [connection  zoneLow:[self byteValue:[line substringWithRange:[match rangeAtIndex:1]]]];
+        [connection zoneHigh:[self byteValue:[line substringWithRange:[match rangeAtIndex:2]]]];
     }
 }
 
@@ -337,7 +324,6 @@
     }
 }
 
-
 - (void)aliasInput:(NSString *)line {
     // TODO
 }
@@ -366,6 +352,58 @@
         return;
     }
     return [regex firstMatchInString:str options:0 range:NSMakeRange(0, [str length])];
+}
+
+- (Byte)byteValue:(NSString *)str {
+    // Note name
+    NSTextCheckingResult *match = [noteRegex firstMatchInString:str options:0 range:NSMakeRange(0, [str length])];
+    if (match != nil)
+        return [self noteFromStr:str];
+
+    // 0xff hex value
+    if ([str length] == 4 && [str characterAtIndex:0] == '0' && [str characterAtIndex:1] == 'x') {
+        int val;
+        sscanf([str cStringUsingEncoding:NSASCIIStringEncoding], "0x%x", &val);
+        return (Byte)val;
+    }
+
+    // Integer
+    return (Byte)[str intValue];
+}
+
+- (Byte)noteFromStr:(NSString *)str {
+    char ch = [str characterAtIndex:0];
+    if (isdigit(ch))
+        return [str intValue];
+    else {
+        int note, octave;
+        switch (ch) {
+        case 'c': case 'C': note = 0; break;
+        case 'd': case 'D': note = 2; break;
+        case 'e': case 'E': note = 4; break;
+        case 'f': case 'F': note = 5; break;
+        case 'g': case 'G': note = 7; break;
+        case 'a': case 'A': note = 9; break;
+        case 'b': case 'B': note = 11; break;
+        }
+        ch = [str characterAtIndex:1];
+        int octaveIndex = 1;
+        if (ch == '#' || ch == 's' || ch == 'S') {
+            ++note;
+            ++octaveIndex;
+        }
+        else if (ch == 'b' || ch == 'f') {
+            --note;
+            ++octaveIndex;
+        }
+        octave = [[str substringFromIndex:octaveIndex] intValue];
+        return octave * 12 + note;
+    }
+}
+
+// For testing
+- (id)km:(KeyMaster *)kmInstance {
+    km = kmInstance;
 }
 
 @end
