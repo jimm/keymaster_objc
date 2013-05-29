@@ -11,6 +11,7 @@
 #import <Trigger.h>
 #import <InputInstrument.h>
 #import <OutputInstrument.h>
+#import <consts.h>
 
 @interface Reader (private)
 - (void)processLine:(NSString *)line;
@@ -366,6 +367,17 @@
         sscanf([str cStringUsingEncoding:NSASCIIStringEncoding], "0x%x", &val);
         return (Byte)val;
     }
+
+    int value;
+    const char *cStr1 = [str cStringUsingEncoding:NSASCIIStringEncoding];
+    value = statusFromName(cStr1);
+    if (value != UNDEFINED)
+        return value;
+
+    const char *cStr2 = [str cStringUsingEncoding:NSASCIIStringEncoding];
+    value = ccFromName(cStr2);
+    if (value != UNDEFINED)
+        return value;
 
     // Integer
     return (Byte)[str intValue];

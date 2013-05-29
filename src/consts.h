@@ -135,6 +135,9 @@
 #define CM_MONO_MODE_ON 0x7E  // Val # chans
 #define CM_POLY_MODE_ON 0x7F  // Val must be 0
 
+@class NSDictionary;
+extern NSDictionary *constNameValues;
+
 /*
 // Controller names
 char *CONTROLLER_NAMES[128];

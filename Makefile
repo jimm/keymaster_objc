@@ -9,7 +9,7 @@ SRC = src/Chain.m src/Connection.m src/curses/Geometry.m src/curses/InfoWindow.m
     src/curses/KMWindow.m src/curses/ListWindow.m src/curses/PatchWindow.m \
     src/curses/TriggerWindow.m src/Cursor.m src/InputInstrument.m src/Instrument.m \
     src/KeyMaster.m src/OutputInstrument.m src/PacketMessageIterator.m src/Patch.m \
-    src/Reader.m src/Song.m src/Trigger.m src/curses/PromptWindow.m
+    src/Reader.m src/Song.m src/Trigger.m src/curses/PromptWindow.m src/consts.m
 OBJS = $(SRC:.m=.o)
 MAIN = src/km.m
 MAIN_OBJ = $(MAIN:.m=.o)
@@ -17,7 +17,7 @@ TESTNAME = test/kmtest
 TEST_SRC = test/kmtest.m test/PatchTest.m test/ConnectionTest.m \
     test/MockInputInstrument.m test/MockOutputInstrument.m test/TriggerTest.m \
     test/PacketMessageIteratorTest.m test/ChainTest.m test/KeyMasterTest.m \
-    test/OutputInstrumentTest.m test/ReaderTest.m
+    test/OutputInstrumentTest.m test/ReaderTest.m test/ConstsTest.m
 TEST_OBJS = $(TEST_SRC:.m=.o)
 
 # ================================================================
@@ -101,13 +101,15 @@ src/PacketMessageIterator.o: src/PacketMessageIterator.m src/PacketMessageIterat
 
 src/Patch.o: src/Patch.m src/Patch.h src/Song.h src/Connection.h
 
-src/Reader.o: src/Reader.m src/Reader.h src/PYMIDI/PYMIDI.h src/Reader.h src/KeyMaster.h src/Chain.h src/Song.h src/Patch.h src/Connection.h src/Trigger.h src/InputInstrument.h src/OutputInstrument.h
+src/Reader.o: src/Reader.m src/Reader.h src/PYMIDI/PYMIDI.h src/Reader.h src/KeyMaster.h src/Chain.h src/Song.h src/Patch.h src/Connection.h src/Trigger.h src/InputInstrument.h src/OutputInstrument.h src/consts.h
 
 src/Song.o: src/Song.m src/Song.h src/Patch.h
 
 src/Trigger.o: src/Trigger.m src/Trigger.h src/PacketMessageIterator.h src/KeyMaster.h
 
-src/curses/PromptWindow.o: src/curses/PromptWindow.h src/curses/Geometry.h
+src/curses/PromptWindow.o: src/curses/PromptWindow.m src/curses/PromptWindow.h src/curses/Geometry.h
+
+src/consts.o: src/consts.m src/consts.h
 
 $(MAIN_OBJ): src/km.m src/KeyMaster.h src/Reader.h
 
@@ -134,3 +136,5 @@ test/OutputInstrumentTest.o: test/OutputInstrumentTest.m test/MockOutputInstrume
 test/KeyMasterTest.o: test/KeyMasterTest.m src/KeyMaster.h src/KeyMaster.m src/Chain.h src/Song.h test/MockOutputInstrument.o src/consts.h
 
 test/ReaderTest.o: test/ReaderTest.m src/Reader.h src/Reader.m src/KeyMaster.h test/MockInputInstrument.h src/Trigger.h
+
+test/ConstsTest.o: test/COnstsTest.m src/consts.h src/consts.m

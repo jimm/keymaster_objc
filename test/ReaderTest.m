@@ -32,10 +32,17 @@
 - (void)testByteValue {
     NSString *msg = @"bad byte value";
     STAssertEquals(48, (int)[reader byteValue:@"C4"], msg);
+
     STAssertEquals(48, (int)[reader byteValue:@"48"], msg);
+
     STAssertEquals(32, (int)[reader byteValue:@"0x20"], msg);
     STAssertEquals(176, (int)[reader byteValue:@"0xb0"], msg);
     STAssertEquals(255, (int)[reader byteValue:@"0xff"], msg);
+
+    STAssertEquals(0x80, (int)[reader byteValue:@"NOTE_OFF"], msg);
+    STAssertEquals(0xff, (int)[reader byteValue:@"SYSTEM_RESET"], msg);
+    STAssertEquals(0,    (int)[reader byteValue:@"CC_BANK_SELECT"], msg);
+    STAssertEquals(0x7b, (int)[reader byteValue:@"CM_ALL_NOTES_OFF"], msg);
 }
 
 - (void)testTrigger {
