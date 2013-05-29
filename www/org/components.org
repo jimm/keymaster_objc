@@ -16,27 +16,23 @@ And whether pigs have wings."\\
 #+end_quote
 
 This section describes the things that make up a KeyMaster document:
-instruments, songs, patches, connections, triggers, messages, and filters.
+instruments, songs, patches, connections, triggers, messages, and chains.
 The [[file:file_format.org][file format]] page tells you how to put them all together into a
 KeyMaster file.
 
 * Instruments
 
-An intstrument represents either a MIDI input to a synth, drum machine, or
-other device or a MIDI output from a controller. Each instrument needs a
-symbol (a usually short name starting with ":"), specifies which UNIMidi
-port number it uses, and has a name.
+An instrument represents either a MIDI input to a synth, drum machine, or
+other device or a MIDI output from a controller. Run =./keymaster -l= to
+list the instruments that are available.
 
-Input instrument symbols must be unique, as must output instruments. The
-same symbol can be used for an input and an output, however. You'd usually
-do that if you have an instrument such as a keyboard that can act as both a
+Each instrument needs a short one-word name that you make up and a long name
+that matches the name output by =keymaster -l=.
+
+Both input and output instruments' short names must be unique. The same
+short name can be used for an input and an output, however. You'd usually do
+that if you have an instrument such as a keyboard that can act as both a
 controller (an output instrument) and a sound module (an input instrument).
-
-If you don't give an instrument a name, KeyMaster will display the name
-that UNIMidi uses. This isn't always what you want, because if you're using
-a MIDI interface such as the Unitor amt8, UNIMidi will use the names of the
-ports themselves, not the instruments plugged in to them (for example,
-"Unitor Port 0", "Unitor Port 1", ...).
 
 ** Example
 
@@ -46,10 +42,10 @@ sound generator) on purt 1, and a rack-mount sound generator on port 2.
 Here's what that might look like in your KeyMaster file:
 
 #+begin_src ruby
-  input  0, :con, 'My Controller'
-  input  1, :kbd, 'The Keyboard'
-  output 1, :kbd, 'The Keyboard'
-  output 2, :rack                 # Will use UNIMidi name
+  input  con Lystereen Breath Controller
+  input  kbd FancyPants MegaKeybaord
+  output kbd FancyPants MegaKeybaord
+  output rack UnitMaker Rack Unit 42b
 #+end_src
 
 * Songs
@@ -105,26 +101,11 @@ would cause a note number to be out of range (lower than 0 or higher than
 127), then the value is wrapped around --- a note transposed up to 128
 becomes 0, for example.
 
-** Filters
-
-Filters let you do anything you want to the data, including filter out
-notes, transpose, modify controller values --- anything. That's because a
-filter has a block of Ruby code that gets executed for every message that
-goes through the connection.
-
-Filters are applied as the last step in a connection's modification of the
-MIDI data. This means that the status byte's channel is already changed to
-the output instrument's channel for this connection (assuming the message is
-a channel message).
-
-The filter's block must return the array of bytes you want sent to the
-output. Don't use the "return" keyword; simply add the bytes as the last
-thing in the block.
-
 * Chains
 
 A chain is a list of songs. A song can appear in more than one chain. One
-special chain called "All Songs" contains the list of all songs.
+special chain called "All Songs" contains an alphabetically-sorted list of
+all songs.
 
 * Named Messages
 
@@ -150,15 +131,4 @@ Whenever the assigned key is pressed, the corresponding message is sent. See
 * Triggers
 
 A trigger looks for a particular incoming MIDI message from a paticular
-input instrument and runs a block of code when it is seen. The blocks can
-contain any Ruby code. Typically triggers are used for navigation or sending
-named messages.
-
-All triggers are executed by the =PM::KeyMaster= instance. Practially
-speaking this means you can call any of the methods of that object or its
-=PM::Cursor= object, including but not limited to
-
-- =next_song=, =prev_song=, =next_patch=, =prev_patch=
-- =goto_song=
-- =send_message=
-- =panic=
+input instrument and sends MIDI data when it is seen.
