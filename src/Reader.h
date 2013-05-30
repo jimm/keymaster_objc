@@ -15,6 +15,7 @@
     BOOL readingNotes;
     BOOL readingChain;
     NSString *notes;
+    NSString *notesIndentation;
     NSRegularExpression *noteRegex;
 }
 
@@ -26,4 +27,6 @@
 - (id)km:(KeyMaster *)kmInstance;
 - (Byte)byteValue:(NSString *)str;
 - (Byte)noteFromStr:(NSString *)str;
+- (void)notesLine:(NSString *)line;
+- (NSString *)notes;
 @end

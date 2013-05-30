@@ -15,7 +15,6 @@
 
 @interface Reader (private)
 - (void)processLine:(NSString *)line;
-- (void)notesLine:(NSString *)line;
 - (void)endNotes:(NSString *)line;
 - (void)addSongToChain:(NSString *)line;
 - (NSString *)cleanse:(NSString *)line;
@@ -175,10 +174,35 @@
 }
 
 - (void)notesLine:(NSString *)line {
-    if (notes == nil)
-        notes = [NSString stringWithString:line];
-    else
-        notes = [notes stringByAppendingFormat:@"\n%@", line];
+    if (notes == nil) {
+        NSTextCheckingResult *match = [self match:@"^([ \t]+)(.*)" inString:line];
+        if (match != nil) {
+            notesIndentation = [line substringWithRange:[match rangeAtIndex:1]];
+            notes = [line substringWithRange:[match rangeAtIndex:2]];
+        }
+        else {
+            notesIndentation = nil;
+            notes = [NSString stringWithString:line];
+        }
+    }
+    else {
+        if (notesIndentation == nil)
+            notes = [notes stringByAppendingFormat:@"\n%@", line];
+        else {
+            NSRange r = [line rangeOfString:notesIndentation];
+            if (r.location == 0) {
+                r.location = r.length;
+                r.length = [line length] - [notesIndentation length];
+                notes = [notes stringByAppendingFormat:@"\n%@", [line substringWithRange:r]];
+            }
+            else
+                notes = [notes stringByAppendingFormat:@"\n%@", line];
+        }
+    }
+}
+
+- (NSString *)notes {
+    return notes;
 }
 
 - (void)endNotes:(NSString *)line {

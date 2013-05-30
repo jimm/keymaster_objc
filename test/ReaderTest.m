@@ -59,4 +59,11 @@
     STAssertEqualObjects(@"b0 32 ff", [trigger dataDescription], @"bad trigger bytes");
 }
 
+- (void)testNoteIndentationPreservation {
+    [reader notesLine:@" \t line one"];
+    [reader notesLine:@" \t   line two"];
+    [reader notesLine:@" \t line three"];
+    STAssertEqualObjects(@"line one\n  line two\nline three", [reader notes], @"song note indentation preservation failure indication");
+}
+
 @end
