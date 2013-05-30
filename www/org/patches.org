@@ -105,7 +105,7 @@ swapping" of filter code.
 The filter's block must evaluate to the bytes you want sent. That is, it
 must have as its last line an array of bytes or =nil=. For example,
 
-#+begin_src ruby
+#+begin_src keymaster
   filter { |connection, bytes|
     if bytes.note_off?
       bytes[2] -= 1 unless bytes[2] == 0 # decrease velocity by 1

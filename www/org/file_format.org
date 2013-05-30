@@ -47,12 +47,18 @@ appear anywhere on a line.
 Indentation is ignored. It may be easier to read if you indent patches with
 songs and connections within patches, for example.
 
-** Byte values
+** MIDI Byte Values
 
-Bytes can be written as decimal numbers, hex numbers ("0xff"), or note names
-("C#3"). Note names start with a letter, optionally followed by '#' or 's'
-for sharp or 'b' or 'f' for flat, then ending in an octave number. C4 is
-note number 48.
+MIDI bytes can be written as decimal numbers, hex numbers ("0xff"), note
+names ("C#3"), or the names specified in consts.m such as NOTE_ON, NOTE_OFF,
+or CC_BANK_SELECT. Case is ignored for all byte values.
+
+Note names start with a letter, optionally followed by '#' or 's' for sharp
+or 'b' or 'f' for flat, then ending in an octave number. C4 is note
+number 48.
+
+To add a channel number to a status byte, add a colon (':') and the channel
+number after the name. For example, "NOTE_OFF:4". Channels are one-based.
 
 ** MIDI Instruments
 
@@ -67,7 +73,7 @@ inputs or two outputs with the same short name.
 
 Example:
 
-#+begin_src ruby
+#+begin_src keymaster
   input  con Lystereen Breath Controller
   input  kbd FancyPants MegaKeybaord
   output kbd FancyPants MegaKeybaord
@@ -76,7 +82,7 @@ Example:
 
 ** Triggers
 
-#+begin_src ruby
+#+begin_src keymaster
   trigger input_inst_short_name key bytes...
 #+end_src
 
@@ -86,14 +92,14 @@ executed.
 
 Example:
 
-#+begin_src ruby
-  trigger kbd n 0xb0 50 0xff
-  trigger kbd p 0xb0 51 0xff
+#+begin_src keymaster
+  trigger in1 n CONTROLLER:4 CC_GEN_PURPOSE_5 0xff
+  trigger in1 p CONTROLLER:4 CC_GEN_PURPOSE_6 0xff
 #+end_src
 
 ** Songs
 
-#+begin_src ruby
+#+begin_src keymaster
   song name
 #+end_src
 
@@ -101,14 +107,24 @@ A song is a list of patches.
 
 Example:
 
-#+begin_src ruby
+#+begin_src keymaster
   song My First Song
     // patches...
 #+end_src
 
+*** Song Notes
+
+#+begin_src keymaster
+  song My First Song
+    notes
+    These are notes for the song.
+    They will be displayed in the upper right window.
+    end notes
+#+end_src
+
 *** Patches
 
-#+begin_src ruby
+#+begin_src keymaster
   patch name
     // connections
 #+end_src
@@ -121,7 +137,7 @@ A patch contains connections and optional start and stop byte arrays.
 
 Example:
 
-#+begin_src ruby
+#+begin_src keymaster
   song My First Song
     patch First Song, First Patch
       // start_bytes [TUNE_REQUEST]
@@ -138,7 +154,7 @@ Example:
 
 **** Connections
 
-#+begin_src ruby
+#+begin_src keymaster
   connection in_sym in_chan out_sym out_chan
     // ...
   connection in_sym out_sym out_chan
@@ -160,7 +176,7 @@ All those values are optional; you don't have to specify them.
 
 Example:
 
-#+begin_src ruby
+#+begin_src keymaster
   song My First Song
     patch First Song First Patch
       connection ws 6 sj 4 do  // only chan 6 from ws out to ch 4 on sj
@@ -177,7 +193,7 @@ Example:
 
 ***** Program Changes
 
-#+begin_src ruby
+#+begin_src keymaster
   programChange prog_number
   pc bank_number prog_number
 #+end_src
@@ -191,14 +207,14 @@ in a connection the last one is used.
 
 Examples:
 
-#+begin_src ruby
+#+begin_src keymaster
   progChg 42        // program change only
   pc 2 100          // bank change then program change
 #+end_src
 
 ***** Zones
 
-#+begin_src ruby
+#+begin_src keymaster
   zone low high
 #+end_src
 
@@ -216,13 +232,13 @@ connection the last one is used.
 
 Example:
 
-#+begin_src ruby
+#+begin_src keymaster
   zone C2 B4      // only allows notes from C2 to B4
 #+end_src
 
 ***** Transpose
 
-#+begin_src ruby
+#+begin_src keymaster
   transpose num
 #+end_src
 
@@ -234,7 +250,7 @@ incoming data, not before.
 
 ** Chains
 
-#+begin_src ruby
+#+begin_src keymaster
   chain name
     song name
     another song name
@@ -244,7 +260,7 @@ Optional.
 
 Example:
 
-#+begin_src ruby
+#+begin_src keymaster
   chain Tonight's Song List
     First Song
     Second Song

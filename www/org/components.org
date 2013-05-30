@@ -41,7 +41,7 @@ port 0 of your MIDI interface, a typical keyboard synth (both controller and
 sound generator) on purt 1, and a rack-mount sound generator on port 2.
 Here's what that might look like in your KeyMaster file:
 
-#+begin_src ruby
+#+begin_src keymaster
   input  con Lystereen Breath Controller
   input  kbd FancyPants MegaKeybaord
   output kbd FancyPants MegaKeybaord

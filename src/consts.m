@@ -97,17 +97,31 @@ static const struct cc_desc ccNames[128] = {
     {0, 0}                      // END MARKER
 };
 
+// Maps name to a status byte. If name ends with ",N" where N is a number,
+// then N-1 is added to that status byte.
+//
 // Returns UNDEFINED if not found.
 int statusFromName(const char *name) {
-    NSLog(@"statusFromName name = %s", name); // DEBUG
+    int nameLen = strlen(name);
     int i;
     for (i = 0; i < 128; ++i) {
-        if (statusNames[i] != 0 && strncasecmp(statusNames[i], name, strlen(statusNames[i])) == 0)
-            return 0x80 + i;
+        if (statusNames[i] == 0)
+            continue;
+        int snLen = strlen(statusNames[i]);
+        if (strncasecmp(statusNames[i], name, snLen) == 0) {
+            int statusByte = 0x80 + i;
+            if (nameLen > snLen+1 && name[snLen] == ':') { // read channel number
+                int oneBasedChan = atoi(name + snLen + 1);
+                if (oneBasedChan >= 1 && oneBasedChan <= MIDI_CHANNELS)
+                    statusByte += oneBasedChan - 1;
+            }
+            return statusByte;
+        }
     }
     return UNDEFINED;
 }
 
+// Returns UNDEFINED if not found.
 int ccFromName(const char *name) {
     int i;
     for (i = 0; ccNames[i].name != 0; ++i) {

@@ -25,7 +25,7 @@ predicates.rb defines methods on Integer and Array that might be useful to
 you when writing filters or triggers. Most of the Array methods apply
 themselves to the first byte, so for example these two are equivalent:
 
-#+begin_src ruby
+#+begin_src keymaster
   b.controller?           # true if b is controller status byte, any chan
   my_array.controller?    # true if first byte is controller status byte
   my_array[0].controller? # same as previous line
@@ -37,7 +37,7 @@ You can turn one note into multiple notes either by setting up two different
 connections that connect the same input to the same output, or by writing a
 filter that turns one message into multiple like this:
 
-#+begin_src ruby
+#+begin_src keymaster
   filter { |conn, bytes|
     if bytes.note?
       bytes += bytes    # duplicate note message
@@ -70,13 +70,13 @@ variable to the =message= method. See examples/example.rb.
 Messages can be sent not only from the keyboard but also from a trigger or a
 filter by calling
 
-#+begin_src ruby
+#+begin_src keymaster
   send_message "Message Name"
 #+end_src
 
 To get the message's bytes, for example within a filter, use
 
-#+begin_src ruby
+#+begin_src keymaster
   messages["My Message Name".downcase]
 #+end_src
 
@@ -87,7 +87,7 @@ triggers and filters. Your method has access to the PM::KeyMaster methods
 and instance variables --- for example, @outputs is the array of all output
 instruments.
 
-#+begin_src ruby
+#+begin_src keymaster
   def output_reset
     @outputs.each { |out| out.midi_out([SYSTEM_RESET]) }
   end
@@ -101,7 +101,7 @@ Use the time to modify the MIDI data. Here's an example filter that
 increases or decreases volume based on the time --- essentially an LFO
 that is modulating amplitude.
 
-#+begin_src ruby
+#+begin_src keymaster
   def time_based_volume
     t = Time.now.to_f             # to_f gives sub-second accuracy
     unit_offset = Math.sin(t)     # -1 .. 1

@@ -31,7 +31,7 @@ output instrument numbers listed by =keymaster=.
 Open a file in your text editor. For each MIDI input output you want to use,
 add a line like this:
 
-#+begin_src ruby
+#+begin_src keymaster
   input 0, :keys, 'Long Name'
 #+end_src
 
@@ -43,7 +43,7 @@ The name for each instrument must be different.
 
 Likewise, for each MIDI output add a line like this:
 
-#+begin_src ruby
+#+begin_src keymaster
   output 0, :keys, 'Long Name'
 #+end_src
 
@@ -55,7 +55,7 @@ use the same name.
 
 After the instrument inputs and outputs, add an empty song:
 
-#+begin_src ruby
+#+begin_src keymaster
   song "My First Song" do
   end
 #+end_src
@@ -65,7 +65,7 @@ After the instrument inputs and outputs, add an empty song:
 Let's add a patch that connects the input from =:keys= to the output
 =:another= on channel 1.
 
-#+begin_src ruby
+#+begin_src keymaster
   song "My First Song" do
     patch "First Patch" do
       connection :keys, nil :another, 1
@@ -80,7 +80,7 @@ channel 1 before sending it to =:another=.
 Now let's connect =:keys= to the same synth on a different channel but
 modify the MIDI a bit as it goes through.
 
-#+begin_src ruby
+#+begin_src keymaster
   song "My First Song" do
     patch "First Patch" do
       connection :keys, nil :another, 1
@@ -112,7 +112,7 @@ sends volume control change messages.
 First, we need to write a method that outputs a value between 0 and 127 and
 that changes over time. Let's put this method definition before our song.
 
-#+begin_src ruby
+#+begin_src keymaster
   # Outputs a value from 0 to 127 based on the time.
   def lfo
     t = Time.now.to_f             # to_f gives sub-second accuracy
@@ -135,7 +135,7 @@ that changes over time. Let's put this method definition before our song.
 Next let's add a new connection from =:keys= to =:third= that uses a filter
 to replace the volume of any note message with the current LFO value.
 
-#+begin_src ruby
+#+begin_src keymaster
   def lfo
     # see above
   end
@@ -162,7 +162,7 @@ sent to all outputs. Let's define two messages. The first is a tune request
 and the second sends individual note off messages to every note on every
 channel.
 
-#+begin_src ruby
+#+begin_src keymaster
   message "Tune Request", [TUNE_REQUEST]
 
   full_volumes = (0...MIDI_CHANNELS).collect do |chan|
@@ -175,7 +175,7 @@ We can bind messages to computer keys. Here we'll bind the tune request
 message to F1 and the full volume message to F2. The names here must match
 the names you gave the messages above.
 
-#+begin_src ruby
+#+begin_src keymaster
   message_key "Tune Request", :f1
   message_key "Full Volume", :f2
 #+end_src
@@ -198,23 +198,23 @@ patch and the previous song.
 
 The whole file should look something like this. Blank lines don't matter.
 
-#+begin_src ruby
+#+begin_src keymaster
   input 0, :keys, 'Long Name'
-
+  
   output 0, :keys, 'Long Name'
   output 1, :another, 'Another Long Name'
   output 2, :third, 'Rack Mount Synth'
-
+  
   message "Tune Request", [TUNE_REQUEST]
-
+  
   full_volumes = (0...MIDI_CHANNELS).collect do |chan|
     [CONTROLLER + chan, CC_VOLUME, 127]
   end.flatten
   message "Full Volume", full_volumes
-
+  
   message_key "Tune Request", :f1
   message_key "Full Volume", :f2
-
+  
   # Outputs a value from 0 to 127 based on the time.
   def lfo
     t = Time.now.to_f             # to_f gives sub-second accuracy
@@ -228,7 +228,7 @@ The whole file should look something like this. Blank lines don't matter.
       val
     end
   end
-
+  
   song "My First Song" do
     patch "First Patch" do
       connection :keys, nil :another, 1

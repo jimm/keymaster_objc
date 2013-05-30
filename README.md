@@ -42,6 +42,7 @@ To create a link:
 
 # To Do
 
+* Non-single-letter key names in trigger definitions
 * Documentation
 * Filters
 * Better example with better comments
