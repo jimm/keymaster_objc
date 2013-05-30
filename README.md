@@ -37,8 +37,7 @@ To create a link:
 
 # Bugs
 
-* Need to remember ESC key in KeyMaster.m and send individual note-offs in
-  panic method when two ESC keys sent in a row.
+No known bugs. _If that doesn't tempt fate, I don't know what will._
 
 # To Do
 
