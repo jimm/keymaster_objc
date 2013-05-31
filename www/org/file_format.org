@@ -51,7 +51,8 @@ songs and connections within patches, for example.
 
 MIDI bytes can be written as decimal numbers, hex numbers ("0xff"), note
 names ("C#3"), or the names specified in consts.m such as NOTE_ON, NOTE_OFF,
-or CC_BANK_SELECT. Case is ignored for all byte values.
+or CC_BANK_SELECT. For all names and hex numbers, upper/lower case doesn't
+matter.
 
 Note names start with a letter, optionally followed by '#' or 's' for sharp
 or 'b' or 'f' for flat, then ending in an octave number. C4 is note
@@ -89,6 +90,10 @@ Example:
 Input MIDI messages can cause KeyMaster to react as if you'd pressed a key.
 When =bytes= are sent from the given input instrument then =key= is pressed
 executed.
+
+The key can be a single character, F1-F10, or any of the names SPACE, ESC,
+UP, DOWN, LEFT, RIGHT, BACKSPACE, DELETE, ENTER, or RETURN. For all of
+those names, upper/lower case doesn't matter.
 
 Example:
 
