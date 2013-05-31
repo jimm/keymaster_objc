@@ -8,6 +8,11 @@ getting lag. KeyMaster uses the Mac's native MIDI framework as wrapped by
 Pete Yandell's excellent [PYMIDI](https://github.com/notahat/pymidi)
 library.
 
+# Documentation
+
+The [online documentation](http://jimm.github.io/keymaster) for KeyMaster
+includes detailed explanations, a tutorial, tips and tricks, and more.
+
 # Building
 
     make
