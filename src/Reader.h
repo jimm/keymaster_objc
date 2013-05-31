@@ -25,8 +25,10 @@
 
 @interface Reader (testing)
 - (id)km:(KeyMaster *)kmInstance;
+- (NSData *)readBytesFromString:(NSString *)line skippingWords:(int)numWords;
 - (Byte)byteValue:(NSString *)str;
-- (Byte)noteFromStr:(NSString *)str;
+- (Byte)noteFromString:(NSString *)str;
+- (int)keyFromString:(NSString *)str;
 - (void)notesLine:(NSString *)line;
 - (NSString *)notes;
 @end

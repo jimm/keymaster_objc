@@ -21,12 +21,12 @@
 
 - (void)testNoteFromStr {
     NSString *msg = @"bad note parsing";
-    STAssertEquals(48, (int)[reader noteFromStr:@"C4"], msg);
-    STAssertEquals(49, (int)[reader noteFromStr:@"c#4"], msg);
-    STAssertEquals(49, (int)[reader noteFromStr:@"cs4"], msg);
-    STAssertEquals(47, (int)[reader noteFromStr:@"Cb4"], msg);
-    STAssertEquals(47, (int)[reader noteFromStr:@"Cf4"], msg);
-    STAssertEquals(0, (int)[reader noteFromStr:@"c0"], msg);
+    STAssertEquals(48, (int)[reader noteFromString:@"C4"], msg);
+    STAssertEquals(49, (int)[reader noteFromString:@"c#4"], msg);
+    STAssertEquals(49, (int)[reader noteFromString:@"cs4"], msg);
+    STAssertEquals(47, (int)[reader noteFromString:@"Cb4"], msg);
+    STAssertEquals(47, (int)[reader noteFromString:@"Cf4"], msg);
+    STAssertEquals(0, (int)[reader noteFromString:@"c0"], msg);
 }
 
 - (void)testByteValue {
@@ -59,11 +59,39 @@
     STAssertEqualObjects(@"b0 32 ff", [trigger dataDescription], @"bad trigger bytes");
 }
 
+- (void)testKeyFromStr {
+    NSString *msg = @"bad note parsing";
+    STAssertEquals('n', [reader keyFromString:@"n"], msg);
+    STAssertEquals('3', [reader keyFromString:@"3"], msg);
+    STAssertEquals(27, [reader keyFromString:@"ESC"], msg);
+    STAssertEquals(27, [reader keyFromString:@"esc"], msg);
+    STAssertEquals(KEY_F(1), [reader keyFromString:@"F1"], msg);
+    STAssertEquals(KEY_UP, [reader keyFromString:@"up"], msg);
+}
+
 - (void)testNoteIndentationPreservation {
     [reader notesLine:@" \t line one"];
     [reader notesLine:@" \t   line two"];
     [reader notesLine:@" \t line three"];
     STAssertEqualObjects(@"line one\n  line two\nline three", [reader notes], @"song note indentation preservation failure indication");
+}
+
+- (void)testReadBytes {
+    NSData *data = [reader readBytesFromString:@"1 2 NOTE_OFF:3" skippingWords:0];
+    Byte *bytes = (Byte *)[data bytes];
+    STAssertEquals(3UL, [data length], @"bad length");
+    STAssertEquals((Byte)1, bytes[0], @"bad byte");
+    STAssertEquals((Byte)2, bytes[1], @"bad byte");
+    STAssertEquals((Byte)0x82, bytes[2], @"bad byte");
+}
+
+- (void)testReadBytesSkippingWords {
+    NSData *data = [reader readBytesFromString:@"hello world 1 2 NOTE_OFF:3" skippingWords:2];
+    Byte *bytes = (Byte *)[data bytes];
+    STAssertEquals(3UL, [data length], @"bad length");
+    STAssertEquals((Byte)1, bytes[0], @"bad byte");
+    STAssertEquals((Byte)2, bytes[1], @"bad byte");
+    STAssertEquals((Byte)0x82, bytes[2], @"bad byte");
 }
 
 @end

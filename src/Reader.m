@@ -146,16 +146,9 @@
         NSLog(@"trigger: can't find instrument with short name %@", [args objectAtIndex:1]);
         return;
     }
-    int key = [[args objectAtIndex:2] characterAtIndex:0];
+    int key = [self keyFromString:[args objectAtIndex:2]];
+    NSData *data = [self readBytesFromString:line skippingWords:3];
 
-    // The rest of the args are byte values.
-    int len = [args count] - 3;
-    unsigned char bytes[len];
-    int i;
-    for (i = 0; i < len; ++i)
-        bytes[i] = [self byteValue:[args objectAtIndex:i+3]];
-
-    NSData *data = [NSData dataWithBytes:bytes length:len];
     [inst addTrigger:[Trigger withData:data performKey:key]];
 }
 
@@ -220,12 +213,27 @@
     }
 }
 
+// Assumes first word is to be ignored. Returns NSData * containing
+// remaining words on line as byte values.
+- (NSData *)readBytesFromString:(NSString *)line skippingWords:(int)numWords {
+    NSArray *args = [line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+
+    // Everything but the first word is byte values
+    int len = [args count] - numWords;
+    unsigned char bytes[len];
+    int i;
+    for (i = 0; i < len; ++i)
+        bytes[i] = [self byteValue:[args objectAtIndex:i+numWords]];
+
+    return [NSData dataWithBytes:bytes length:len];
+}
+
 - (void)startBytes:(NSString *)line {
-    // TODO
+    [patch enterData:[self readBytesFromString:line skippingWords:1]];
 }
 
 - (void)stopBytes:(NSString *)line {
-    // TODO
+    [patch exitData:[self readBytesFromString:line skippingWords:1]];
 }
 
 - (void)connection:(NSString *)line {
@@ -383,7 +391,7 @@
     // Note name
     NSTextCheckingResult *match = [noteRegex firstMatchInString:str options:0 range:NSMakeRange(0, [str length])];
     if (match != nil)
-        return [self noteFromStr:str];
+        return [self noteFromString:str];
 
     // 0xff hex value
     if ([str length] == 4 && [str characterAtIndex:0] == '0' && [str characterAtIndex:1] == 'x') {
@@ -407,7 +415,7 @@
     return (Byte)[str intValue];
 }
 
-- (Byte)noteFromStr:(NSString *)str {
+- (Byte)noteFromString:(NSString *)str {
     char ch = [str characterAtIndex:0];
     if (isdigit(ch))
         return [str intValue];
@@ -435,6 +443,33 @@
         octave = [[str substringFromIndex:octaveIndex] intValue];
         return octave * 12 + note;
     }
+}
+
+- (int)keyFromString:(NSString *)str {
+    int ch = [str characterAtIndex:0];
+    if ([str length] == 1)
+        return ch;
+    if (ch == 'f' || ch == 'F')
+        return KEY_F(atoi([[str substringFromIndex:1] cStringUsingEncoding:NSASCIIStringEncoding]));
+    if ([str caseInsensitiveCompare:@"SPACE"] == NSOrderedSame)
+        return ' ';
+    if ([str caseInsensitiveCompare:@"ESC"] == NSOrderedSame)
+        return 27;
+    if ([str caseInsensitiveCompare:@"UP"] == NSOrderedSame)
+        return KEY_UP;
+    if ([str caseInsensitiveCompare:@"DOWN"] == NSOrderedSame)
+        return KEY_DOWN;
+    if ([str caseInsensitiveCompare:@"LEFT"] == NSOrderedSame)
+        return KEY_LEFT;
+    if ([str caseInsensitiveCompare:@"RIGHT"] == NSOrderedSame)
+        return KEY_RIGHT;
+    if ([str caseInsensitiveCompare:@"BACKSPACE"] == NSOrderedSame ||
+        [str caseInsensitiveCompare:@"DELETE"] == NSOrderedSame)
+        return KEY_BACKSPACE;
+    if ([str caseInsensitiveCompare:@"ENTER"] == NSOrderedSame ||
+        [str caseInsensitiveCompare:@"RETURN"] == NSOrderedSame)
+        return KEY_ENTER;
+    return 0;
 }
 
 // For testing

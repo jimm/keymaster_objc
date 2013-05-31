@@ -57,27 +57,22 @@ KeyMaster *km = nil;
     return self;
 }
 
+- (void)printEndpointsIn:(NSArray *)list withPrompt:(const char *)prompt {
+    printf("%s:\n", prompt);
+    for (PYMIDIEndpoint *ep in [manager realSources]) {
+        PYMIDIEndpointDescriptor *desc = [ep descriptor];
+        const char *name = [[desc name] cStringUsingEncoding:NSASCIIStringEncoding];
+        const char *displayName = [[ep displayName] cStringUsingEncoding:NSASCIIStringEncoding];
+        printf("\t%x %s", [desc uniqueID], name);
+        if (strncmp(name, displayName, strlen(name)) != 0)
+            printf(" (%s)", displayName);
+        printf("\n");
+    }
+}
+
 - (id)printSourcesAndDestinations {
-    printf("sources:\n");
-    NSEnumerator *enumerator = [[manager realSources] objectEnumerator];
-    PYMIDIEndpoint *ep;
-    PYMIDIEndpointDescriptor *desc;
-    while (ep = [enumerator nextObject]) {
-        printf("\t%s\n", [[ep displayName] cStringUsingEncoding:NSASCIIStringEncoding]);
-
-        desc = [ep descriptor];
-        printf("\tdesc name \"%s\", desc id %08x\n", [[desc name] cStringUsingEncoding:NSASCIIStringEncoding], [desc uniqueID]);
-    }
-
-    printf("destinations:\n");
-    enumerator = [[manager realDestinations] objectEnumerator];
-    while (ep = [enumerator nextObject]) {
-        printf("\t%s\n", [[ep displayName] cStringUsingEncoding:NSASCIIStringEncoding]);
-
-        desc = [ep descriptor];
-        printf("\tdesc name \"%s\", desc id %08x\n", [[desc name] cStringUsingEncoding:NSASCIIStringEncoding], [desc uniqueID]);
-    }
-
+    [self printEndpointsIn:[manager realSources] withPrompt:"sources"];
+    [self printEndpointsIn:[manager realDestinations] withPrompt:"destinations"];
     return self;
 }
 
