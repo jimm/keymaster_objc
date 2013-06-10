@@ -140,7 +140,6 @@ KeyMaster *km = nil;
         // help
         break;
     case 27:                    // ESC
-        // FIXME send individual notes
         [self panicSendIndividualNotes:(prevKey == 27)];
         break;
     case TESTING_KEY:           // used for testing only
