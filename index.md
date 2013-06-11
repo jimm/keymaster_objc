@@ -20,7 +20,8 @@ totally reconfigured.
 
 KeyMaster lets you describe _songs_, which are lists of _patches_ that
 connect _instruments_. Those _connections_ can send program changes, set
-keyboard splits, transpose, and send volume or other controller changes.
+keyboard splits, transpose, filter messages and controllers, and send volume
+or other controller changes.
 
 _Chains_ let you organize songs into set lists for live performance or in
 the studio.
@@ -31,13 +32,13 @@ forward or backward based on controller values coming from foot switches or
 an instrument's buttons.
 
 Any array of MIDI bytes can be stored as a named _message_ which can be sent
-via a trigger or a key press. (_NOT YET IMPLEMENTED_.)
+via a trigger or a key press. _NOT YET IMPLEMENTED_
 
 A software panic button turns off any stuck notes.
 
 KeyMaster is by [Jim Menard](mailto:jim@jimmenard.com). It is a rewrite of
-[PatchMaster](http://patchmaster.org). The Github repo is
-[here](https://github.com/jimm/keymaster).
+[PatchMaster](http://patchmaster.org), in Objective C for the Mac OS. The
+Github repo is [here](https://github.com/jimm/keymaster).
 
 # Requirements
 
@@ -48,6 +49,10 @@ XCode.
 # Installation
 
 Download the source code. Type "make".
+
+## Testing
+
+Type "make test".
 
 # Running KeyMaster
 
