@@ -49,8 +49,7 @@ Here's what that might look like in your KeyMaster file:
 
 A song is a named list of patches that allow you to control your MIDI setup.
 A song can have any number of patches. You can step forward and backward
-through the patches in a song using the GUI movement keys or
-[triggers](triggers.html).
+through the patches in a song using the GUI movement keys or triggers.
 
 When a song becomes the current song, its first patch is made the current
 patch.

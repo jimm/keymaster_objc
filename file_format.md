@@ -76,11 +76,11 @@ Example:
 
 ## Triggers
 
-    trigger input_inst_short_name key bytes...
+    trigger key input_inst_short_name bytes...
 
 Input MIDI messages can cause KeyMaster to react as if you'd pressed a key.
-When `bytes` are sent from the given input instrument then `key` is pressed
-executed.
+When `bytes` are sent from the given input instrument then `key`'s action is
+performed.
 
 The key can be a single character, F1-F10, or any of the names SPACE, ESC,
 UP, DOWN, LEFT, RIGHT, BACKSPACE, DELETE, ENTER, or RETURN. For all of
@@ -88,8 +88,8 @@ those names, upper/lower case doesn't matter.
 
 Example:
 
-    trigger in1 n CONTROLLER:4 CC_GEN_PURPOSE_5 0xff
-    trigger in1 p CONTROLLER:4 CC_GEN_PURPOSE_6 0xff
+    trigger n in1 CONTROLLER:4 CC_GEN_PURPOSE_5 0xff
+    trigger p in1 CONTROLLER:4 CC_GEN_PURPOSE_6 0xff
 
 ## Songs
 

@@ -27,7 +27,6 @@ title: To Do
     to all but the most crucial features.
     -- Steve Jobs
 
-* Non-single-letter key names in trigger definitions
 * Documentation
 * Filters
 * Better example with better comments
