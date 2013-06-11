@@ -46,9 +46,8 @@ No known bugs. _If that doesn't tempt fate, I don't know what will._
 
 # To Do
 
-* Non-single-letter key names in trigger definitions
-* Documentation
-* Filters
+* More documentation
+* More complex filters
 * Better example with better comments
 * Aliases
 * Named Messages and Message Keys
