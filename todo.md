@@ -21,12 +21,6 @@ title: To Do
 
 * There's no way to cancel out of a PromptWindow (file load/save).
 
-* Trigger and filter block text isn't read properly when triggers or filters
-  are created in a loop, the blocks are not indented properly, etc.
-
-* Need better CSS for Web site so left margin of content moves when site
-  made bigger and LHS grows into it.
-
 # New Features
 
     Innovation is not about saying yes to everything. It's about saying NO

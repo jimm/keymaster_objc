@@ -31,7 +31,7 @@ forward or backward based on controller values coming from foot switches or
 an instrument's buttons.
 
 Any array of MIDI bytes can be stored as a named _message_ which can be sent
-via a trigger, a key press, or from any filter.
+via a trigger or a key press. (_NOT YET IMPLEMENTED_.)
 
 A software panic button turns off any stuck notes.
 

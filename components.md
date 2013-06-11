@@ -99,11 +99,20 @@ would cause a note number to be out of range (lower than 0 or higher than
 127), then the value is wrapped around --- a note transposed up to 128
 becomes 0, for example.
 
+## Filters
+
+A connection can optionally filter one or more MIDI messages. Any messages
+coming from the input instrument that match a filtered status (channel is
+ignored) are not passed through to the output.
+
+If you just want to filter a particular controller (and not all controller
+messages), see "Controller Filters" below.
+
 ## Controller Filters
 
 A connection can optionally filter one or more controllers. Any controller
 messages coming from the input instrument are not passed through to the
-output.
+output. Channel is ignored.
 
 # Chains
 
@@ -113,8 +122,10 @@ all songs.
 
 # Named Messages
 
+_NOT YET IMPLEMENTED_.
+
 A named message is an array of MIDI bytes with a name. Named messages can be
-sent using message keys, via triggers, or even from filters.
+sent using message keys or via triggers.
 
 Named messages are sent to all output instruments. The MIDI bytes are sent
 from KeyMaster with channels unchanged. If a named message contains

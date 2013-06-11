@@ -165,9 +165,8 @@ Example:
           programChange 100             // no bank, prog chg 100
           zone C4 B6
           transpose -12
-          filter { |connection bytes|
-            // ...
-          }
+          filter POLY_PRESSURE
+          filterController VOLUME
         end
       end
     end
@@ -219,6 +218,15 @@ note off, and polyphonic pressure messages.
 Note that transposition occurs after a connection's zone has filtered out
 incoming data, not before.
 
+##### Filtering Messages
+
+    filter status
+
+`status` is a MIDI status byte name or number. You can use a decimal or
+hex number or the name of a controller as specified in consts.h.
+
+When filtering, channel is ignored.
+
 ##### Filtering Controllers
 
     filterController num
@@ -226,6 +234,8 @@ incoming data, not before.
 
 `num` is a MIDI byte value (a controller number). You can use a decimal or
 hex number or the name of a controller as specified in consts.h.
+
+When filtering controllers, channel is ignored.
 
 ## Chains
 
@@ -252,6 +262,9 @@ Many of the keywords in KeyMaster files have short versions.
 </tr>
 <tr>
   <td>connection</td><td>conn, c</td>
+</tr>
+<tr>
+  <td>filter</td><td>f</td>
 </tr>
 <tr>
   <td>filterController</td><td>fc</td>
