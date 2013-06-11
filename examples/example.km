@@ -1,5 +1,6 @@
 input in1 IAC Driver Bus 1
 output out1 IAC Driver Bus 1
+output out2 Some Super Synth
 
 trigger in1 n CONTROLLER:4 CC_GEN_PURPOSE_5 0xff
 trigger in1 p CONTROLLER:4 CC_GEN_PURPOSE_6 0xff
@@ -18,6 +19,7 @@ end notes
       progChg 1 64              // bank 1, pc 64
       zone c4 b5
       xpose 12
+      filter POLY_PRESSURE
 
 song Song Two
 notes
@@ -27,6 +29,10 @@ end notes
   patch Song Two, Patch One
     conn in1 6 out1 2
       progChg 64                // no bank
+      filterController VOLUME
+    conn in1 4 out2 1
+      filter POLY_PRESSUE
+      xpose -12
 
   patch Song Two, Patch Two
 
