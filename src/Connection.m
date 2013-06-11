@@ -9,6 +9,7 @@
 
 @interface Connection (private)
 - (BOOL)acceptInput:(Byte *)data;
+- (BOOL)byte:(Byte)b isInData:(NSData *)data;
 @end
 
 @implementation Connection
@@ -25,6 +26,7 @@
     zoneHigh = 127;
     xpose = 0;
     filteredControllerNumbers = [NSMutableData dataWithCapacity:4];
+    filteredStatuses = [NSMutableData dataWithCapacity:4];
     return self;
 }
 
@@ -149,9 +151,32 @@
 }
 
 - (id)addFilteredControllerNumber:(Byte)cc {
-    NSLog(@"adding filtered controller number %d", (int)cc); // DEBUG
     [filteredControllerNumbers appendBytes:&cc length:1];
     return self;
+}
+
+- (NSData *)filteredStatuses {
+    return filteredStatuses;
+}
+
+- (id)addFilteredStatus:(Byte)b {
+    if (is_channel(b))
+        b &= 0xF0;
+    [filteredStatuses appendBytes:&b length:1];
+    return self;
+}
+
+- (BOOL)byte:(Byte)b isInData:(NSData *)data {
+    NSUInteger len = [data length];
+    if (len == 0)
+        return NO;
+
+    int i;
+    Byte *bytes = (Byte *)[data bytes];
+    for (i = 0; i < len; ++i)
+        if (b == bytes[i])
+            return YES;
+    return NO;
 }
 
 - (BOOL)acceptInput:(Byte *)data {
@@ -161,14 +186,17 @@
     // Check to see if this is a controller message and we're filtering this
     // controller.
     Byte highNibble = data[0] & 0xF0;
-    if (highNibble == CONTROLLER && [filteredControllerNumbers length] > 0) {
-        Byte ccNumber = data[1];
-        int i;
-        Byte *fcNumbers = (Byte *)[filteredControllerNumbers bytes];
-        for (i = 0; i < [filteredControllerNumbers length]; ++i) {
-            if (ccNumber == fcNumbers[i])
-                return NO;
-        }
+    if (highNibble == CONTROLLER && [filteredControllerNumbers length] > 0)
+        if ([self byte:data[1] isInData:filteredControllerNumbers])
+            return NO;
+
+    // Check to see if this is a status and we're filtering it.
+    if (is_status(data[0])) {
+        Byte status = data[0];
+        if (is_channel(data[0]))
+            status &= 0xF0;
+        if ([self byte:status isInData:filteredStatuses])
+            return NO;
     }
 
     return YES;

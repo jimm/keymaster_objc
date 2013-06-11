@@ -4,6 +4,7 @@
 // Mostly used for Connection values.
 #define UNDEFINED -1
 
+#define is_status(b) ((b) >= 0x80)
 #define is_channel(b) ((b) >= 0x80 && (b) < 0xF0)
 #define is_realtime(b) ((b) >= 0xF8)
 // is_note includes POLY_PRESSURE

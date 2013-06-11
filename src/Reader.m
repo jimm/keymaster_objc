@@ -332,18 +332,24 @@
     [self xpose:line];
 }
 
-- (void)filterController:(NSString *)line {
+- (void)fc:(NSString *)line {
     NSTextCheckingResult *match = [self match:@"\\w+\\s+(\\w+)" inString:line];
     if (match)
         [connection addFilteredControllerNumber:[self byteValue:[line substringWithRange:[match rangeAtIndex:1]]]];
 }
 
-- (void)fc:(NSString *)line {
-    [self filterController:line];
+- (void)filterController:(NSString *)line {
+    [self fc:line];
 }
 
 - (void)filter:(NSString *)line {
-    // TODO
+    NSTextCheckingResult *match = [self match:@"\\w+\\s+(\\w+)" inString:line];
+    if (match)
+        [connection addFilteredStatus:[self byteValue:[line substringWithRange:[match rangeAtIndex:1]]]];
+}
+
+- (void)f:(NSString *)line {
+    [self f:line];
 }
 
 - (void)chain:(NSString *)line {

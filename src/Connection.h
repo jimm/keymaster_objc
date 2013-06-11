@@ -16,6 +16,7 @@
     int zoneHigh;
     int xpose;
     NSMutableData *filteredControllerNumbers;
+    NSMutableData *filteredStatuses;
 }
 
 - (id)init;
@@ -54,6 +55,9 @@
 
 - (NSData *)filteredControllerNumbers;
 - (id)addFilteredControllerNumber:(Byte)cc;
+
+- (NSData *)filteredStatuses;
+- (id)addFilteredStatus:(Byte)b;
 
 - (id)midiIn:(MIDIPacket *)packet;
 

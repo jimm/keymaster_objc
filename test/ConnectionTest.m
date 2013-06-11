@@ -6,6 +6,7 @@
 #import <consts.h>
 
 #define BIG_MESSAGE_SIZE 3333
+#define TEST_INPUT_CHAN 3
 #define TEST_OUTPUT_CHAN 2
 
 @interface ConnectionTest : SenTestCase {
@@ -144,6 +145,17 @@
     [self assertBytes:NOTE_ON + TEST_OUTPUT_CHAN and:52 and:127 msg:@"xpose didn't work"];
 }
 
+- (void)testTransposePolyPressure {
+    MIDIPacket packet;
+    packet.timeStamp = 0;
+    packet.length = 3;
+    packet.data[0] = POLY_PRESSURE + TEST_INPUT_CHAN;
+    packet.data[1] = 40;
+    packet.data[2] = 127;
+    [conn midiIn:&packet];
+
+    [self assertBytes:POLY_PRESSURE + TEST_OUTPUT_CHAN and:52 and:127 msg:@"xpose didn't work"];
+}
 
 - (void)sendControllerChan:(Byte)ch cc:(Byte)cc val:(Byte)val {
     MIDIPacket packet;
@@ -157,9 +169,20 @@
 
 - (void)testControllerFiltered {
     [conn addFilteredControllerNumber:42];
-    [self sendControllerChan:3 cc:42 val:100];
-    [self sendControllerChan:3 cc:41 val:99];
+    [self sendControllerChan:TEST_INPUT_CHAN cc:42 val:100];
+    [self sendControllerChan:TEST_INPUT_CHAN cc:41 val:99];
     [self assertBytes:CONTROLLER + TEST_OUTPUT_CHAN and:41 and:99 msg:@"did not skip filtered controller"];
+}
+
+- (void)testStatusFiltered {
+    [conn addFilteredStatus:CONTROLLER];
+    [conn xpose:0];
+    [[conn zoneLow:0] zoneHigh:127];
+
+    [self sendControllerChan:TEST_INPUT_CHAN cc:42 val:100];
+    [self sendNoteChan:TEST_INPUT_CHAN note:64 vel:127];
+    [self sendControllerChan:TEST_INPUT_CHAN cc:41 val:99];
+    [self assertBytes:NOTE_ON + TEST_OUTPUT_CHAN and:64 and:127 msg:@"did not skip filtered controller"];
 }
 
 - (void)testProgSent {
