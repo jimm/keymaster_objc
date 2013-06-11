@@ -6,6 +6,7 @@
 #import <consts.h>
 
 #define BIG_MESSAGE_SIZE 3333
+#define TEST_OUTPUT_CHAN 2
 
 @interface ConnectionTest : SenTestCase {
     MockInputInstrument *input;
@@ -23,7 +24,7 @@
     conn = [[Connection alloc] init];
     [conn input:input];
     [conn output:output];
-    [conn outputChan:2];
+    [conn outputChan:TEST_OUTPUT_CHAN];
     [conn pcProg: 3];
     [[conn zoneLow:40] zoneHigh: 60];
     [conn xpose: 12];
@@ -40,7 +41,7 @@
     STAssertEquals(input, [conn input], @"conn input not set correctly");
     STAssertTrue([conn inputChan] == -1, @"conn input chan not set correctly");
     STAssertEquals(output, [conn output], @"conn output not set correctly");
-    STAssertTrue([conn outputChan] == 2, @"conn output chan not set correctly");
+    STAssertTrue([conn outputChan] == TEST_OUTPUT_CHAN, @"conn output chan not set correctly");
     STAssertTrue([conn pcProg] == 3, @"pcProg is wrong");
     STAssertTrue([conn zoneLow] == 40, @"zoneLow is wrong");
     STAssertTrue([conn zoneHigh] == 60, @"zoneHigh is wrong");
@@ -126,21 +127,39 @@
 - (void)testOutputSentToOutputChannel {
     [conn xpose:0];
     [self sendNoteChan:1 note:40 vel:127];
-    [self assertBytes:NOTE_ON + 2 and:40 and:127 msg:@"sent chan 1"];
+    [self assertBytes:NOTE_ON + TEST_OUTPUT_CHAN and:40 and:127 msg:@"sent chan 1"];
 
     [output reset];
     [self sendNoteChan:0 note:40 vel:127];
-    [self assertBytes:NOTE_ON + 2 and:40 and:127 msg:@"sent chan 0"];
+    [self assertBytes:NOTE_ON + TEST_OUTPUT_CHAN and:40 and:127 msg:@"sent chan 0"];
 
     [output reset];
     [self sendNoteChan:15 note:40 vel:127];
-    [self assertBytes:NOTE_ON + 2 and:40 and:127 msg:@"sent chan 15"];
+    [self assertBytes:NOTE_ON + TEST_OUTPUT_CHAN and:40 and:127 msg:@"sent chan 15"];
 }
 
 - (void)testTranspose {
     STAssertEquals(12, [conn xpose], @"bad xpose value");
     [self sendNoteChan:1 note:40 vel:127];
-    [self assertBytes:NOTE_ON + 2 and:52 and:127 msg:@"xpose didn't work"];
+    [self assertBytes:NOTE_ON + TEST_OUTPUT_CHAN and:52 and:127 msg:@"xpose didn't work"];
+}
+
+
+- (void)sendControllerChan:(Byte)ch cc:(Byte)cc val:(Byte)val {
+    MIDIPacket packet;
+    packet.timeStamp = 0;
+    packet.length = 3;
+    packet.data[0] = CONTROLLER + ch;
+    packet.data[1] = cc;
+    packet.data[2] = val;
+    [conn midiIn:&packet];
+}
+
+- (void)testControllerFiltered {
+    [conn addFilteredControllerNumber:42];
+    [self sendControllerChan:3 cc:42 val:100];
+    [self sendControllerChan:3 cc:41 val:99];
+    [self assertBytes:CONTROLLER + TEST_OUTPUT_CHAN and:41 and:99 msg:@"did not skip filtered controller"];
 }
 
 - (void)testProgSent {

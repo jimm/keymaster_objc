@@ -3,7 +3,7 @@
 #import <Foundation/NSObject.h>
 #import <CoreMIDI/CoreMIDI.h>
 
-@class InputInstrument, OutputInstrument;
+@class InputInstrument, OutputInstrument, NSMutableData;
 
 @interface Connection : NSObject {
     InputInstrument *input;
@@ -15,6 +15,7 @@
     int zoneLow;
     int zoneHigh;
     int xpose;
+    NSMutableData *filteredControllerNumbers;
 }
 
 - (id)init;
@@ -50,6 +51,9 @@
 
 - (int)xpose;
 - (id)xpose:(int)xpose;
+
+- (NSData *)filteredControllerNumbers;
+- (id)addFilteredControllerNumber:(Byte)cc;
 
 - (id)midiIn:(MIDIPacket *)packet;
 

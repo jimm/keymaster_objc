@@ -24,6 +24,7 @@
     zoneLow = 0;
     zoneHigh = 127;
     xpose = 0;
+    filteredControllerNumbers = [NSMutableData dataWithCapacity:4];
     return self;
 }
 
@@ -143,12 +144,34 @@
     return self;
 }
 
+- (NSData *)filteredControllerNumbers {
+    return filteredControllerNumbers;
+}
+
+- (id)addFilteredControllerNumber:(Byte)cc {
+    NSLog(@"adding filtered controller number %d", (int)cc); // DEBUG
+    [filteredControllerNumbers appendBytes:&cc length:1];
+    return self;
+}
+
 - (BOOL)acceptInput:(Byte *)data {
-    if (inputChan == UNDEFINED)
-        return YES;
-    if (!is_channel(data[0]))
-        return YES;
-    return channel(data[0]) == inputChan ? YES : NO;
+    if (inputChan != UNDEFINED && is_channel(data[0]) && channel(data[0]) != inputChan)
+        return NO;
+
+    // Check to see if this is a controller message and we're filtering this
+    // controller.
+    Byte highNibble = data[0] & 0xF0;
+    if (highNibble == CONTROLLER && [filteredControllerNumbers length] > 0) {
+        Byte ccNumber = data[1];
+        int i;
+        Byte *fcNumbers = (Byte *)[filteredControllerNumbers bytes];
+        for (i = 0; i < [filteredControllerNumbers length]; ++i) {
+            if (ccNumber == fcNumbers[i])
+                return NO;
+        }
+    }
+
+    return YES;
 }
 
 - (id)midiIn:(MIDIPacket *)packet {
@@ -177,6 +200,7 @@
             bytes[0] = (data[0] & 0xF0) + outputChan;
             bytes[1] = data[1];
             Byte highNibble = data[0] & 0xF0;
+
             if (highNibble == CONTROLLER || highNibble == PITCH_BEND) {
                 bytes[2] = data[2];
                 numBytes = 3;

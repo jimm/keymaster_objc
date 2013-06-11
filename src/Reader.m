@@ -332,6 +332,16 @@
     [self xpose:line];
 }
 
+- (void)filterController:(NSString *)line {
+    NSTextCheckingResult *match = [self match:@"\\w+\\s+(\\w+)" inString:line];
+    if (match)
+        [connection addFilteredControllerNumber:[self byteValue:[line substringWithRange:[match rangeAtIndex:1]]]];
+}
+
+- (void)fc:(NSString *)line {
+    [self filterController:line];
+}
+
 - (void)filter:(NSString *)line {
     // TODO
 }
