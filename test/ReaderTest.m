@@ -51,7 +51,7 @@
     [km addInput:inst];
 
     [reader km:km];
-    [reader trigger:@"trigger foo n 0xb0 50 0xff"];
+    [reader trigger:@"trigger n foo 0xb0 50 0xff"];
     STAssertEquals(1UL, [[inst triggers] count], @"trigger not created");
 
     Trigger *trigger = [[inst triggers] objectAtIndex:0];

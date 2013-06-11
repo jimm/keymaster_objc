@@ -2,10 +2,10 @@ input in1 IAC Driver Bus 1
 output out1 IAC Driver Bus 1
 output out2 Some Super Synth
 
-trigger in1 n CONTROLLER:4 CC_GEN_PURPOSE_5 0xff
-trigger in1 p CONTROLLER:4 CC_GEN_PURPOSE_6 0xff
-trigger in1 j CONTROLLER:4 CC_GEN_PURPOSE_7 0xff
-trigger in1 k CONTROLLER:4 CC_GEN_PURPOSE_8 0xff
+trigger n in1 CONTROLLER:4 CC_GEN_PURPOSE_5 0xff
+trigger p in1 CONTROLLER:4 CC_GEN_PURPOSE_6 0xff
+trigger j in1 CONTROLLER:4 CC_GEN_PURPOSE_7 0xff
+trigger k in1 CONTROLLER:4 CC_GEN_PURPOSE_8 0xff
 
 // song
 song Song One

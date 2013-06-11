@@ -137,16 +137,16 @@
 - (void)trigger:(NSString *)line {
     NSArray *args = [line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if ([args count] < 4) {
-        NSLog(@"trigger command needs instrument, a key, and one or more byte values");
+        NSLog(@"trigger command needs a key, an input instrument, and one or more byte values");
         return;
     }
 
-    InputInstrument *inst = [km inputWithShortName:[args objectAtIndex:1]];
+    int key = [self keyFromString:[args objectAtIndex:1]];
+    InputInstrument *inst = [km inputWithShortName:[args objectAtIndex:2]];
     if (inst == nil) {
-        NSLog(@"trigger: can't find instrument with short name %@", [args objectAtIndex:1]);
+        NSLog(@"trigger: can't find instrument with short name %@", [args objectAtIndex:2]);
         return;
     }
-    int key = [self keyFromString:[args objectAtIndex:2]];
     NSData *data = [self readBytesFromString:line skippingWords:3];
 
     [inst addTrigger:[Trigger withData:data performKey:key]];
