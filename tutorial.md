@@ -73,9 +73,10 @@ modify the MIDI a bit as it goes through.
       patch First Patch
         connection keys another 1
         connection keys another 2
-          prog_chg 42
+          progChg 42
           transpose 12
           zone C4, B6
+          filterController CC_VOLUME
 
 Here we've connected `keys` to channel 2 of `another`, sent it a program
 change command, transposed all notes (and polyphonic pressure messages) up
@@ -110,7 +111,24 @@ The whole file should look something like this. Blank lines don't matter.
       patch First Patch
         connection keys nil another 1
         connection keys nil another 2
-          prog_chg 42
+          progChg 42
           transpose 12
           zone C4 B6
         connection keys nil third 1
+
+Here's a version using short names:
+
+    in keys Long Name
+  
+    out keys Long Name
+    out another Another Long Name
+    out third Rack Mount Synth
+  
+    song My First Song
+      patch First Patch
+        c keys nil another 1
+        c keys nil another 2
+          pc 42
+          x 12
+          z C4 B6
+        c keys nil third 1

@@ -219,6 +219,14 @@ note off, and polyphonic pressure messages.
 Note that transposition occurs after a connection's zone has filtered out
 incoming data, not before.
 
+##### Filtering Controllers
+
+    filterController num
+    fc num
+
+`num` is a MIDI byte value (a controller number). You can use a decimal or
+hex number or the name of a controller as specified in consts.h.
+
 ## Chains
 
     chain name
@@ -244,6 +252,9 @@ Many of the keywords in KeyMaster files have short versions.
 </tr>
 <tr>
   <td>connection</td><td>conn, c</td>
+</tr>
+<tr>
+  <td>filterController</td><td>fc</td>
 </tr>
 <tr>
   <td>input</td><td>in</td>

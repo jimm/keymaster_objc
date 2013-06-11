@@ -26,6 +26,7 @@ instrument and channel, and the following optional values:
 * Program change number
 * Keyboard zone (low/high keys stored as a Ruby Range object)
 * Transpose
+* Controller filter
 
 If the input instrument's channel is not specified then all input from that
 instrument is run through the connection. If the channel is specified then

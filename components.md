@@ -99,6 +99,12 @@ would cause a note number to be out of range (lower than 0 or higher than
 127), then the value is wrapped around --- a note transposed up to 128
 becomes 0, for example.
 
+## Controller Filters
+
+A connection can optionally filter one or more controllers. Any controller
+messages coming from the input instrument are not passed through to the
+output.
+
 # Chains
 
 A chain is a list of songs. A song can appear in more than one chain. One
