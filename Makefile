@@ -1,7 +1,7 @@
 NAME = keymaster
 XCODE_FRAMEWORKS_DIR = /Applications/Xcode.app/Contents/Developer/Library/Frameworks
 CC = gcc
-CFLAGS = -Itest -isystem src -F $(XCODE_FRAMEWORKS_DIR) -fobjc-gc-only
+CFLAGS = -Itest -isystem src -F $(XCODE_FRAMEWORKS_DIR)
 LIBFLAGS = -lncurses
 FRAMEWORKS = -framework AudioToolbox -framework CoreMIDI -framework Foundation
 TEST_FRAMEWORKS = $(FRAMEWORKS) -framework SenTestingKit

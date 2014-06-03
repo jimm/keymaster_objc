@@ -21,7 +21,7 @@
     wmove(win, 1, 1);
     wattron(win, A_REVERSE);
     NSString *str = @" Key | Input            | Trigger";
-    str = [str stringByAppendingFormat:@"%*s", getmaxx(win) - 2 - [str length], " "];
+    str = [str stringByAppendingFormat:@"%*s", (int)(getmaxx(win) - 2 - [str length]), " "];
     waddstr(win, [str cStringUsingEncoding:NSASCIIStringEncoding]);
     wattroff(win, A_REVERSE);
 

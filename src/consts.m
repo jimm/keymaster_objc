@@ -1,6 +1,7 @@
 #import <Foundation/NSObject.h>
 #import <strings.h>
 #import <consts.h>
+#import <stdlib.h>              // for atoi and strn*
 
 // Yes, searching these lists to find the corresponding value is O(n).
 // However, it only happens at start-up when reading a .km file. Speed is

@@ -52,7 +52,7 @@
 - (id)drawHeaders {
     wattron(win, A_REVERSE);
     NSString *str = @" Input          Chan | Output         Chan |  Prog |    Zone   | Xpose | Filter";
-    str = [str stringByAppendingFormat:@"%*s", getmaxx(win) - 2 - [str length], " "];
+    str = [str stringByAppendingFormat:@"%*s", (int)(getmaxx(win) - 2 - [str length]), " "];
     waddstr(win, [str cStringUsingEncoding:NSASCIIStringEncoding]);
     wattroff(win, A_REVERSE);
     return self;

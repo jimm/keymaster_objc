@@ -13,6 +13,10 @@
 #import <OutputInstrument.h>
 #import <consts.h>
 
+// From consts.m
+int statusFromName(const char *name);
+int ccFromName(const char *name);
+
 @interface Reader (private)
 - (void)processLine:(NSString *)line;
 - (void)endNotes:(NSString *)line;
@@ -398,7 +402,7 @@
                                                                              error:&error];
     if (error != nil) {
         NSLog(@"%@", error);
-        return;
+        return nil;
     }
     return [regex firstMatchInString:str options:0 range:NSMakeRange(0, [str length])];
 }
@@ -491,6 +495,7 @@
 // For testing
 - (id)km:(KeyMaster *)kmInstance {
     km = kmInstance;
+    return self;
 }
 
 @end

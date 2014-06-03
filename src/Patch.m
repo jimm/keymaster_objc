@@ -82,6 +82,7 @@
 
 - (id)addConnection:(Connection *)connection {
     [connections addObject:connection];
+    return self;
 }
 
 @end

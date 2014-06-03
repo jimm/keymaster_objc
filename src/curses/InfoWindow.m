@@ -36,12 +36,13 @@
         text = infoText;
         [self title:@"KeyMaster"];
     }
+    return self;
 }
 
 - (id)draw {
     [super draw];
     if (text == nil)            // should not happen
-        return;
+        return self;
 
     int i = 1;
     int *pi = &i;

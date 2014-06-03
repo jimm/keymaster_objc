@@ -41,6 +41,7 @@
 
 - (id)addPatch:patch {
     [patches addObject:patch];
+    return self;
 }
 
 - (NSComparisonResult)compareToSong:(Song *)song {

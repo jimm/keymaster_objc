@@ -333,11 +333,13 @@ KeyMaster *km = nil;
         [infoWin text:nil];
         [patchWin patch:nil];
     }
+    return self;
 }
 
 - (id)panicSendIndividualNotes:(BOOL)individual {
     for (OutputInstrument *output in outputs)
         [output panicSendIndividualNotes:individual];
+    return self;
 }
 
 - (int)testingKey {
