@@ -342,7 +342,7 @@ int ccFromName(const char *name);
         [connection addFilteredControllerNumber:[self byteValue:[line substringWithRange:[match rangeAtIndex:1]]]];
 }
 
-- (void)filterController:(NSString *)line {
+- (void)filtercontroller:(NSString *)line {
     [self fc:line];
 }
 
