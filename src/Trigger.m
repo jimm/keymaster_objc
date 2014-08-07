@@ -37,7 +37,7 @@
     if ([data length] == 0)
         return @"";
 
-    Byte *buf = malloc([data length] * 3), *p;
+    char *buf = malloc([data length] * 3), *p;
     const unsigned char *bytes = [data bytes];
 
     int i;
@@ -45,7 +45,7 @@
         sprintf(p, " %02x", (unsigned char)bytes[i]);
 
     // The +1 removes the initial space
-    NSString *str = [NSString stringWithCString:buf+1 encoding:NSASCIIStringEncoding];
+    NSString *str = [NSString stringWithCString:(const char *)(buf+1) encoding:NSASCIIStringEncoding];
     free(buf);
     return str;
 }

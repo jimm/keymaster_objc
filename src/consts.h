@@ -154,4 +154,8 @@ char *GM_PATCH_NAMES[128];
 char *GM_DRUM_NOTE_NAMES[47];
 */
 
+// Function declarations
+int statusFromName(const char *name);
+int ccFromName(const char *name);
+
 #endif // _CONSTS_

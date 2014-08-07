@@ -2,6 +2,7 @@
 #import <Foundation/NSString.h>
 #import <KeyMaster.h>
 #import <Reader.h>
+#import <string.h>
 
 #define LOGFILE "/tmp/keymaster.log"
 
