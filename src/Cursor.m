@@ -54,9 +54,8 @@
 }
 
 - (Patch *)prevPatch {
-    if ([self firstPatchInSong]) {
+    if ([self firstPatchInSong])
         [self prevSong];
-    }
     else {
         [patch stop];
         patch = [[song patches] objectAtIndex:--patchIndex];
