@@ -24,7 +24,7 @@ instrument and channel, and the following optional values:
 
 * Program bank number
 * Program change number
-* Keyboard zone (low/high keys stored as a Ruby Range object)
+* Keyboard zone (low/high keys)
 * Transpose
 * Message filter
 * Controller filter
