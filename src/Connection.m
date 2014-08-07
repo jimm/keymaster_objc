@@ -180,22 +180,23 @@
 }
 
 - (BOOL)acceptInput:(Byte *)data {
-    if (inputChan != UNDEFINED && is_channel(data[0]) && channel(data[0]) != inputChan)
+    Byte b = data[0];
+
+    if (inputChan != UNDEFINED && is_channel(b) && channel(b) != inputChan)
         return NO;
 
     // Check to see if this is a controller message and we're filtering this
     // controller.
-    Byte highNibble = data[0] & 0xF0;
+    Byte highNibble = b & 0xF0;
     if (highNibble == CONTROLLER && [filteredControllerNumbers length] > 0)
         if ([self byte:data[1] isInData:filteredControllerNumbers])
             return NO;
 
     // Check to see if this is a status and we're filtering it.
-    if (is_status(data[0])) {
-        Byte status = data[0];
-        if (is_channel(data[0]))
-            status &= 0xF0;
-        if ([self byte:status isInData:filteredStatuses])
+    if (is_status(b)) {
+        if (is_channel(b))
+            b &= 0xF0;
+        if ([self byte:b isInData:filteredStatuses])
             return NO;
     }
 
