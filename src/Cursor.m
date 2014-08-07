@@ -56,7 +56,6 @@
 - (Patch *)prevPatch {
     if ([self firstPatchInSong]) {
         [self prevSong];
-        return patch;
     }
     else {
         [patch stop];
