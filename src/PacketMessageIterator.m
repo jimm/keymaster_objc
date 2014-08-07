@@ -2,7 +2,7 @@
 #import <consts.h>
 
 @interface PacketMessageIterator (private)
-- (void)calculateMessageLength;
+- (void)calculateNextMessageLength;
 @end
 
 @implementation PacketMessageIterator
@@ -10,7 +10,7 @@
 - (id)initWithPacket:(MIDIPacket *)p {
     self = [self init];
     packet = p;
-    [self calculateMessageLength];
+    [self calculateNextMessageLength];
     i = 0;
     return self;
 }
@@ -27,11 +27,11 @@
 
 - (Byte *)nextMessage {
     i += messageLength;
-    [self calculateMessageLength];
+    [self calculateNextMessageLength];
     return [self message];
 }
 
-- (void)calculateMessageLength {
+- (void)calculateNextMessageLength {
     if (i >= packet->length) {
         messageLength = 0;
         return;
