@@ -4,7 +4,7 @@ CC = gcc
 CFLAGS = -Itest -isystem src -F $(XCODE_FRAMEWORKS_DIR)
 LIBFLAGS = -lncurses
 FRAMEWORKS = -framework AudioToolbox -framework CoreMIDI -framework Foundation
-TEST_FRAMEWORKS = $(FRAMEWORKS) -framework SenTestingKit
+TEST_FRAMEWORKS = $(FRAMEWORKS) -framework XCTest
 SRC = src/Chain.m src/Connection.m src/curses/Geometry.m src/curses/InfoWindow.m \
     src/curses/KMWindow.m src/curses/ListWindow.m src/curses/PatchWindow.m \
     src/curses/TriggerWindow.m src/Cursor.m src/InputInstrument.m src/Instrument.m \

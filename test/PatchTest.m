@@ -1,4 +1,4 @@
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import <KeyMaster.h>
 #import <MockInputInstrument.h>
 #import <MockOutputInstrument.h>
@@ -6,7 +6,7 @@
 #import <Connection.h>
 #import <consts.h>
 
-@interface PatchTest : SenTestCase {
+@interface PatchTest : XCTestCase {
     MockInputInstrument *input;
     MockOutputInstrument *output;
     Patch *patch;

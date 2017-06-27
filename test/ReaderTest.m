@@ -1,10 +1,10 @@
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import <Reader.h>
 #import <KeyMaster.h>
 #import <Trigger.h>
 #import <MockInputInstrument.h>
 
-@interface ReaderTest : SenTestCase {
+@interface ReaderTest : XCTestCase {
     Reader *reader;
 }
 @end

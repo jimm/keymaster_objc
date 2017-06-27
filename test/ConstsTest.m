@@ -1,7 +1,7 @@
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import <consts.h>
 
-@interface ConstsTest : SenTestCase
+@interface ConstsTest : XCTestCase
 @end
 
 @implementation ConstsTest

@@ -1,9 +1,9 @@
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import <Trigger.h>
 #import <KeyMaster.h>
 #import <consts.h>
 
-@interface TriggerTest : SenTestCase {
+@interface TriggerTest : XCTestCase {
     Trigger *trigger;
 }
 @end

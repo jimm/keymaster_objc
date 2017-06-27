@@ -27,6 +27,7 @@ includes detailed explanations, a tutorial, tips and tricks, and more.
 
 ## Testing Setup
 
+(FIX THIS DESCRIPTION)
 Before you run the tests, you'll have to copy or link the SenTestingKit
 framework to somewhere like /System/Library/Frameworks. I can't figure out
 how to set `@rpath` at runtime. I've tried using `DYLD_LIBRARY_PATH` and a
@@ -37,8 +38,8 @@ of linking, or figure out how to set `@rpath` (and tell me, please).
 To create a link:
 
     sudo ln -s \
-        /Applications/Xcode.app/Contents/Developer/Library/Frameworks/SenTestingKit.framework \
-        /System/Library/Frameworks/SenTestingKit.framework
+        /Applications/Xcode.app/Contents/Developer/Library/Frameworks/XCTest.framework \
+        /System/Library/Frameworks/XCTest.framework
 
 # Bugs
 

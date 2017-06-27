@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 int main() {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];

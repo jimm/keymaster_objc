@@ -1,11 +1,11 @@
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import <KeyMaster.h>
 #import <Chain.h>
 #import <Song.h>
 #import <consts.h>
 #import <MockOutputInstrument.h>
 
-@interface KeyMasterTest : SenTestCase {
+@interface KeyMasterTest : XCTestCase {
     KeyMaster *km;
 }
 @end

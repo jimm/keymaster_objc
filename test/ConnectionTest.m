@@ -1,4 +1,4 @@
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import <KeyMaster.h>
 #import <MockInputInstrument.h>
 #import <MockOutputInstrument.h>
@@ -9,7 +9,7 @@
 #define TEST_INPUT_CHAN 3
 #define TEST_OUTPUT_CHAN 2
 
-@interface ConnectionTest : SenTestCase {
+@interface ConnectionTest : XCTestCase {
     MockInputInstrument *input;
     MockOutputInstrument *output;
     Connection *conn;

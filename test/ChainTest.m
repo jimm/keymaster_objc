@@ -1,9 +1,9 @@
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import <Chain.h>
 #import <Song.h>
 #import <consts.h>
 
-@interface ChainTest : SenTestCase {
+@interface ChainTest : XCTestCase {
     Chain *chain;
     Song *s1;
     Song *s2;

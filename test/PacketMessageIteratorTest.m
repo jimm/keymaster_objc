@@ -1,10 +1,10 @@
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import <PacketMessageIterator.h>
 #import <consts.h>
 
 #define BIG_MESSAGE_SIZE 3333
 
-@interface PacketMessageIteratorTest : SenTestCase {
+@interface PacketMessageIteratorTest : XCTestCase {
     MIDIPacket *packet;
     PacketMessageIterator *pmi;
 }

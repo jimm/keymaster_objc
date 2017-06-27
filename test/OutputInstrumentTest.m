@@ -1,8 +1,8 @@
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import <MockOutputInstrument.h>
 #import <consts.h>
 
-@interface OutputInstrumentTest : SenTestCase {
+@interface OutputInstrumentTest : XCTestCase {
     MockOutputInstrument *output;
 }
 @end
